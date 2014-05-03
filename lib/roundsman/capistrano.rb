@@ -246,8 +246,12 @@ require 'tempfile'
       end
 
       def generate_attributes
-        attrs = remove_procs_from_hash variables.dup
-        put attrs.to_json, roundsman_working_dir("solo.json"), :via => :scp
+        if fetch(:roundsman_attributes)
+          put fetch(:roundsman_attributes).to_json, roundsman_working_dir("solo.json"), :via => :scp
+        else
+          attrs = remove_procs_from_hash variables.dup
+          put attrs.to_json, roundsman_working_dir("solo.json"), :via => :scp
+        end
       end
 
       # Recursively removes procs from hashes. Procs can exist because you specified them like this:
